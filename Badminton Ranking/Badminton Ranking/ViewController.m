@@ -7,6 +7,8 @@
 
 #import "ViewController.h"
 #import <math.h>
+#import "LineChartViewController.h"
+#import "Badminton Ranking-Bridging-Header.h"
 
 @interface ViewController ()<UITableViewDelegate,UITableViewDataSource>
 
@@ -26,6 +28,14 @@
 @property (weak, nonatomic) IBOutlet UIButton *recordBtn;
 @property (nonatomic,strong) UIButton *scoreBtnPressed;
 @property(nonatomic,strong) UIView* scoreView;
+@property (weak, nonatomic) IBOutlet UIButton *winnerScoreBtn;
+@property (weak, nonatomic) IBOutlet UIButton *loserScoreBtn;
+@property (weak, nonatomic) IBOutlet UIScrollView *historyScroll;
+@property (nonatomic,strong)LineChartView *lineChart;
+
+
+
+
 @end
 
 @implementation ViewController
@@ -38,7 +48,7 @@
     // Do any additional setup after loading the view.
     // 判断是否存在 players.plist 文件,如果存在的话,加载排名
     self.docPath = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
-    self.filePath = [self.docPath stringByAppendingPathComponent:@"players.list"];
+    self.filePath = [self.docPath stringByAppendingPathComponent:@"players.plist"];
     //建立文件管理器
     self.filemanager = [NSFileManager defaultManager];
     if ([self.filemanager fileExistsAtPath:self.filePath]){
@@ -59,12 +69,32 @@
     cell.textLabel.text = [NSString stringWithFormat:@"%ld.  %@",indexPath.row+1,player[@"name"] ];
     NSNumber *score = player[@"score"];
     cell.detailTextLabel.text = [NSString stringWithFormat:@"Score  %.2f",score.floatValue];
-    
+    [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
+
     return cell;
     
 }
 
-- (IBAction)addNumber:(UIButton *)sender {
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    //代理的方法,在选中某一行时,显示历史数据分析的结果
+    
+    //展示胜率
+    
+    //展示平均每局得分
+    
+    //展示最佳队友(胜场最多)
+    
+    //展示最强对手(负场最多)
+    
+    //展示图表1(十场分数变化)
+    
+    //展示图表2(十场得分变化)
+    
+    
+    
+}
+
+- (IBAction)addMember:(UIButton *)sender {
     //弹出一个窗口,请求新成员的名字
     NSString *title = @"Input Your Name";
     NSString *okButtonTitle = @"OK";
@@ -96,7 +126,7 @@
 
         } else{
             //文件不存在,创建文件
-            NSArray *playersArray = @[@{@"name":userName.text,@"score":@500.0}];
+            NSArray *playersArray = @[@{@"name":userName.text,@"score":@1000.0}];
             [playersArray writeToFile:self.filePath atomically:YES];
             NSLog(@"Create file");
             
@@ -160,7 +190,7 @@
 }
 - (IBAction)recordBtnClicked:(UIButton *)sender {
     //找出需要的 player
-    NSMutableArray* playerIndexArray = [NSMutableArray arrayWithObjects:@-1,@-1,@-1,@-1,nil];
+    NSMutableArray* playerDictArray = [NSMutableArray arrayWithObjects:@-1,@-1,@-1,@-1,nil];
     for (int i = 0; i < self.players.count; i++) {
         
         for (int j = 0;j < 4;j++)
@@ -168,7 +198,7 @@
             UIButton *player_j = self.playersInGame[j];
             NSString *playername_j = player_j.titleLabel.text;
             if ([self.players[i][@"name"] isEqualToString:playername_j]){
-                playerIndexArray[j]  = self.players[i];
+                playerDictArray[j]  = self.players[i];
                 
             }
         }
@@ -176,10 +206,10 @@
     }
     
     //计算分数变化
-    NSNumber *play1p = playerIndexArray[0][@"score"];
-    NSNumber *play2p = playerIndexArray[1][@"score"];
-    NSNumber *play3p = playerIndexArray[2][@"score"];
-    NSNumber *play4p = playerIndexArray[3][@"score"];
+    NSNumber *play1p = playerDictArray[0][@"score"];
+    NSNumber *play2p = playerDictArray[1][@"score"];
+    NSNumber *play3p = playerDictArray[2][@"score"];
+    NSNumber *play4p = playerDictArray[3][@"score"];
     double team1p = play1p.doubleValue + play2p.doubleValue;
     double team2p = play3p.doubleValue + play4p.doubleValue;
     
@@ -191,10 +221,11 @@
     CGFloat changeTeam2 = 50 * (-winRateTeam2) * 0.7;
     
     //改变分数
-    playerIndexArray[0][@"score"] = [[NSNumber alloc] initWithDouble:play1p.doubleValue + 0.5*changeTeam1];
-    playerIndexArray[1][@"score"] = [[NSNumber alloc] initWithDouble:play2p.doubleValue + 0.5*changeTeam1];
-    playerIndexArray[2][@"score"] = [[NSNumber alloc] initWithDouble:play3p.doubleValue + 0.5*changeTeam2];
-    playerIndexArray[3][@"score"] = [[NSNumber alloc] initWithDouble:play4p.doubleValue + 0.5*changeTeam2];
+    playerDictArray[0][@"score"] = [[NSNumber alloc] initWithDouble:play1p.doubleValue + 0.5*changeTeam1];
+    playerDictArray[1][@"score"] = [[NSNumber alloc] initWithDouble:play2p.doubleValue + 0.5*changeTeam1];
+    playerDictArray[2][@"score"] = [[NSNumber alloc] initWithDouble:MAX(play3p.doubleValue + 0.5*changeTeam2,1000)];
+    playerDictArray[3][@"score"] = [[NSNumber alloc] initWithDouble:MAX(play4p.doubleValue + 0.5*changeTeam2,1000)];
+    
     //保存到文件中
     [self.players writeToFile:self.filePath atomically:YES];
     //重新加载 tableview
@@ -212,10 +243,94 @@
     [self.recordBtn setEnabled:NO];
     //创建一个新方法,用来记录对局历史
     
+    NSNumber *winnerScore = [NSNumber numberWithInt:[self.winnerScoreBtn.titleLabel.text intValue]];
+    NSNumber *loserScore = [NSNumber numberWithInt:[self.loserScoreBtn.titleLabel.text intValue]];
+    
+    [self recordMatchHistoryTo:playerDictArray andWinnerScore:winnerScore andLoserScore:loserScore];
+    
 }
 
-- (void)recordMatchHistoryTo:(NSString *)name withPlayers:(NSArray *)playerIndex andScore:(NSNumber *)score{
-    
+- (void)recordMatchHistoryTo:(NSArray *)playerDictArray andWinnerScore:(NSNumber *)winnerScore andLoserScore:(NSNumber *)loserScore{
+    for (int i = 0; i < playerDictArray.count; i++) {
+        int playerIndex = i;
+        int partnerIndex = -1,opnt1Index = -1,opnt2Index = -1;
+        NSNumber *score;
+        NSNumber *opntScore;
+        NSNumber *isWinner;
+        switch (playerIndex) {
+            case 0:
+                partnerIndex = 1;
+                opnt1Index = 2;
+                opnt2Index = 3;
+                score = winnerScore;
+                opntScore = loserScore;
+                isWinner = [NSNumber numberWithBool:YES];
+                break;
+            case 1:
+                partnerIndex = 0;
+                opnt1Index = 2;
+                opnt2Index = 3;
+                score = winnerScore;
+                opntScore = loserScore;
+                isWinner = [NSNumber numberWithBool:YES];
+                break;
+            case 2:
+                partnerIndex = 3;
+                opnt1Index = 0;
+                opnt2Index = 1;
+                score = loserScore;
+                opntScore = winnerScore;
+                isWinner = [NSNumber numberWithBool:NO];
+                break;
+            case 3:
+                partnerIndex = 2;
+                opnt1Index = 0;
+                opnt2Index = 1;
+                score = loserScore;
+                opntScore = winnerScore;
+                isWinner = [NSNumber numberWithBool:NO];
+                break;
+                
+                
+            default:
+                NSLog(@"something wrong with history recording.");
+                break;
+        }
+        
+        NSString *historyFilePath = [self.docPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.plist",playerDictArray[playerIndex][@"name"]]];
+        
+        if ([self.filemanager fileExistsAtPath:historyFilePath]){
+            //文件存在,追加元素
+            NSMutableArray *playersArray = [NSMutableArray arrayWithContentsOfFile:historyFilePath];
+            [playersArray addObject:@{@"partnerName":playerDictArray[partnerIndex][@"name"],
+                                      @"opnt1Name":playerDictArray[opnt1Index][@"name"],
+                                      @"opnt2Name":playerDictArray[opnt2Index][@"name"],
+                                      @"score":score,
+                                      @"opntScore":opntScore,
+                                      @"personalScore":playerDictArray[playerIndex][@"score"],
+                                      @"isWinner":isWinner,
+                                                    
+                                    }];
+            [playersArray writeToFile:historyFilePath atomically:YES];
+            NSLog(@"history of %@ recorded to %@",playerDictArray[playerIndex][@"name"],historyFilePath);
+            
+
+        } else{
+            //文件不存在,创建文件
+            NSArray *playersArray =@[ @{@"partnerName":playerDictArray[partnerIndex][@"name"],
+                                      @"opnt1Name":playerDictArray[opnt1Index][@"name"],
+                                      @"opnt2Name":playerDictArray[opnt2Index][@"name"],
+                                      @"score":score,
+                                      @"opntScore":opntScore,
+                                      @"personalScore":playerDictArray[playerIndex][@"score"],
+                                      @"isWinner":isWinner,
+                                                    
+                                    }];
+            [playersArray writeToFile:historyFilePath atomically:YES];
+            NSLog(@"history of %@ recorded to %@",playerDictArray[playerIndex][@"name"],historyFilePath);
+            
+        }
+    }
 }
 
 -(IBAction)coverClicked:(UIButton *)sender{

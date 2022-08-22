@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -16,6 +16,9 @@
 		361773B228B23F4E00E18EF2 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 361773B128B23F4E00E18EF2 /* main.m */; };
 		361773BC28B23F4E00E18EF2 /* Badminton_RankingTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 361773BB28B23F4E00E18EF2 /* Badminton_RankingTests.m */; };
 		361773C728B23F4F00E18EF2 /* Badminton_RankingUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 361773C628B23F4F00E18EF2 /* Badminton_RankingUITests.m */; };
+		6C7A577A28B441C900EB1565 /* LineChartViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6C7A577828B441C800EB1565 /* LineChartViewController.xib */; };
+		6C7A577B28B441C900EB1565 /* LineChartViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C7A577928B441C800EB1565 /* LineChartViewController.m */; };
+		D0E83383F3E815DF23989DA5 /* Pods_Badminton_Ranking.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 118FA8E4B12BD068AD0F9B4F /* Pods_Badminton_Ranking.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,6 +39,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		07C9800E2A92CAE0463138C7 /* Pods-Badminton Ranking.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Badminton Ranking.release.xcconfig"; path = "Target Support Files/Pods-Badminton Ranking/Pods-Badminton Ranking.release.xcconfig"; sourceTree = "<group>"; };
+		118FA8E4B12BD068AD0F9B4F /* Pods_Badminton_Ranking.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Badminton_Ranking.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		1A43D1B227A7D6CF3A6B9A35 /* Pods-Badminton Ranking.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Badminton Ranking.debug.xcconfig"; path = "Target Support Files/Pods-Badminton Ranking/Pods-Badminton Ranking.debug.xcconfig"; sourceTree = "<group>"; };
 		3617739C28B23F4C00E18EF2 /* Badminton Ranking.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Badminton Ranking.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3617739F28B23F4C00E18EF2 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		361773A028B23F4C00E18EF2 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -54,6 +60,10 @@
 		361773C228B23F4F00E18EF2 /* Badminton RankingUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Badminton RankingUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		361773C628B23F4F00E18EF2 /* Badminton_RankingUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Badminton_RankingUITests.m; sourceTree = "<group>"; };
 		361773C828B23F4F00E18EF2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		6C7A577328B43EE700EB1565 /* Badminton Ranking-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Badminton Ranking-Bridging-Header.h"; sourceTree = "<group>"; };
+		6C7A577728B441C800EB1565 /* LineChartViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LineChartViewController.h; sourceTree = "<group>"; };
+		6C7A577828B441C800EB1565 /* LineChartViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LineChartViewController.xib; sourceTree = "<group>"; };
+		6C7A577928B441C800EB1565 /* LineChartViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LineChartViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,6 +71,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D0E83383F3E815DF23989DA5 /* Pods_Badminton_Ranking.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -88,6 +99,8 @@
 				361773BA28B23F4E00E18EF2 /* Badminton RankingTests */,
 				361773C528B23F4F00E18EF2 /* Badminton RankingUITests */,
 				3617739D28B23F4C00E18EF2 /* Products */,
+				64EE7C125E90CD410E31EDB3 /* Pods */,
+				C15D0DF880A3C4F67276652E /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -104,6 +117,9 @@
 		3617739E28B23F4C00E18EF2 /* Badminton Ranking */ = {
 			isa = PBXGroup;
 			children = (
+				6C7A577728B441C800EB1565 /* LineChartViewController.h */,
+				6C7A577828B441C800EB1565 /* LineChartViewController.xib */,
+				6C7A577928B441C800EB1565 /* LineChartViewController.m */,
 				3617739F28B23F4C00E18EF2 /* AppDelegate.h */,
 				361773A028B23F4C00E18EF2 /* AppDelegate.m */,
 				361773A228B23F4C00E18EF2 /* SceneDelegate.h */,
@@ -115,6 +131,7 @@
 				361773AD28B23F4E00E18EF2 /* LaunchScreen.storyboard */,
 				361773B028B23F4E00E18EF2 /* Info.plist */,
 				361773B128B23F4E00E18EF2 /* main.m */,
+				6C7A577328B43EE700EB1565 /* Badminton Ranking-Bridging-Header.h */,
 			);
 			path = "Badminton Ranking";
 			sourceTree = "<group>";
@@ -137,6 +154,23 @@
 			path = "Badminton RankingUITests";
 			sourceTree = "<group>";
 		};
+		64EE7C125E90CD410E31EDB3 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				1A43D1B227A7D6CF3A6B9A35 /* Pods-Badminton Ranking.debug.xcconfig */,
+				07C9800E2A92CAE0463138C7 /* Pods-Badminton Ranking.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		C15D0DF880A3C4F67276652E /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				118FA8E4B12BD068AD0F9B4F /* Pods_Badminton_Ranking.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -144,9 +178,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 361773CB28B23F4F00E18EF2 /* Build configuration list for PBXNativeTarget "Badminton Ranking" */;
 			buildPhases = (
+				978D966B80410DB36CF20CD4 /* [CP] Check Pods Manifest.lock */,
 				3617739828B23F4C00E18EF2 /* Sources */,
 				3617739928B23F4C00E18EF2 /* Frameworks */,
 				3617739A28B23F4C00E18EF2 /* Resources */,
+				C910228C6278E59D9AAE3EE6 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -203,6 +239,7 @@
 				TargetAttributes = {
 					3617739B28B23F4C00E18EF2 = {
 						CreatedOnToolsVersion = 12.4;
+						LastSwiftMigration = 1340;
 					};
 					361773B628B23F4E00E18EF2 = {
 						CreatedOnToolsVersion = 12.4;
@@ -240,6 +277,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				361773AF28B23F4E00E18EF2 /* LaunchScreen.storyboard in Resources */,
+				6C7A577A28B441C900EB1565 /* LineChartViewController.xib in Resources */,
 				361773AC28B23F4E00E18EF2 /* Assets.xcassets in Resources */,
 				361773AA28B23F4C00E18EF2 /* Main.storyboard in Resources */,
 			);
@@ -261,6 +299,48 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		978D966B80410DB36CF20CD4 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Badminton Ranking-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C910228C6278E59D9AAE3EE6 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Badminton Ranking/Pods-Badminton Ranking-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Badminton Ranking/Pods-Badminton Ranking-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Badminton Ranking/Pods-Badminton Ranking-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		3617739828B23F4C00E18EF2 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -268,6 +348,7 @@
 			files = (
 				361773A728B23F4C00E18EF2 /* ViewController.m in Sources */,
 				361773A128B23F4C00E18EF2 /* AppDelegate.m in Sources */,
+				6C7A577B28B441C900EB1565 /* LineChartViewController.m in Sources */,
 				361773B228B23F4E00E18EF2 /* main.m in Sources */,
 				361773A428B23F4C00E18EF2 /* SceneDelegate.m in Sources */,
 			);
@@ -375,7 +456,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -428,7 +509,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -438,10 +519,13 @@
 		};
 		361773CC28B23F4F00E18EF2 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1A43D1B227A7D6CF3A6B9A35 /* Pods-Badminton Ranking.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = A3TQ6Z9FUV;
 				INFOPLIST_FILE = "Badminton Ranking/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -449,16 +533,22 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "Muyao.Badminton-Ranking";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Badminton Ranking/Badminton Ranking-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
 		361773CD28B23F4F00E18EF2 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 07C9800E2A92CAE0463138C7 /* Pods-Badminton Ranking.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = A3TQ6Z9FUV;
 				INFOPLIST_FILE = "Badminton Ranking/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -466,6 +556,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "Muyao.Badminton-Ranking";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Badminton Ranking/Badminton Ranking-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
