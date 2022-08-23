@@ -123,13 +123,11 @@
                                     <action selector="addMember:" destination="BYZ-38-t0r" eventType="touchUpInside" id="abA-iq-OaL"/>
                                 </connections>
                             </button>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HWi-z2-tcn">
-                                <rect key="frame" x="248" y="226" width="800" height="450"/>
+                            <stackView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" axis="vertical" distribution="equalCentering" alignment="top" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="9Dy-Oa-kAG">
+                                <rect key="frame" x="248" y="201" width="812" height="493"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                <viewLayoutGuide key="contentLayoutGuide" id="hPz-SY-MjW"/>
-                                <viewLayoutGuide key="frameLayoutGuide" id="nLL-fF-ncd"/>
-                            </scrollView>
+                            </stackView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemGray2Color"/>
@@ -139,9 +137,9 @@
                         <outlet property="Player2" destination="95d-V2-ScF" id="X86-pt-TyX"/>
                         <outlet property="Player3" destination="Ys3-3f-J4o" id="SIq-Se-eoo"/>
                         <outlet property="Player4" destination="yII-o8-Av6" id="eBs-jv-pt0"/>
-                        <outlet property="historyScroll" destination="HWi-z2-tcn" id="3sL-m7-C5S"/>
                         <outlet property="loserScoreBtn" destination="kcQ-J2-hZR" id="B2j-Gl-4jF"/>
                         <outlet property="recordBtn" destination="nxZ-l5-PvE" id="coF-Ol-swS"/>
+                        <outlet property="stackViewForHistory" destination="9Dy-Oa-kAG" id="BBP-Ve-NOY"/>
                         <outlet property="table" destination="0mV-XF-WvU" id="eLY-vr-2JB"/>
                         <outlet property="winnerScoreBtn" destination="Ujz-Oe-JGk" id="mZU-NX-UD8"/>
                     </connections>

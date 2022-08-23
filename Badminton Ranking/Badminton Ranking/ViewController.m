@@ -30,7 +30,8 @@
 @property(nonatomic,strong) UIView* scoreView;
 @property (weak, nonatomic) IBOutlet UIButton *winnerScoreBtn;
 @property (weak, nonatomic) IBOutlet UIButton *loserScoreBtn;
-@property (weak, nonatomic) IBOutlet UIScrollView *historyScroll;
+@property (weak, nonatomic) IBOutlet UIStackView *stackViewForHistory;
+
 @property (nonatomic,strong)LineChartView *lineChart;
 
 
@@ -67,25 +68,215 @@
     // 创建单元格
     UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:nil];
     cell.textLabel.text = [NSString stringWithFormat:@"%ld.  %@",indexPath.row+1,player[@"name"] ];
+    
     NSNumber *score = player[@"score"];
     cell.detailTextLabel.text = [NSString stringWithFormat:@"Score  %.2f",score.floatValue];
     [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
-
+    // 设置段位图片
+    int rankLevel = score.intValue/100 -10;
+    NSString *rankLevelString;
+    if(rankLevel == 0){
+        rankLevelString = @"";
+    }else{
+        rankLevelString = [NSString stringWithFormat: @"%d",rankLevel-1];
+    }
+    cell.imageView.image = [UIImage imageNamed:[NSString stringWithFormat:@"guild_match_rank%@",rankLevelString]];
+    
     return cell;
     
 }
 
+//代理的方法,在选中某一行时,显示历史数据分析的结果
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    //代理的方法,在选中某一行时,显示历史数据分析的结果
+    //NSLog(@"%lu",[indexPath indexAtPosition:1]);
+    
+    NSString *historyFilePath = [self.docPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.plist",self.players[[indexPath indexAtPosition:1]][@"name"]]];
+    NSArray *historyRecord = [NSArray arrayWithContentsOfFile:historyFilePath];
+    //NSLog(@"history record %@",[NSString stringWithFormat:@"%@.plist",self.players[[indexPath indexAtPosition:1]][@"name"]]);
+    
+    NSNumber *winRate = [NSNumber numberWithDouble:0.0];
+    NSNumber *winGames = [NSNumber numberWithInt:0];
+    NSNumber *totalScore = [NSNumber numberWithInt:0];
+    NSNumber *totalOpntScore = [NSNumber numberWithInt:0];
+    NSNumber *averageScore = [NSNumber numberWithInt:0];
+    NSNumber *averageOpntScore = [NSNumber numberWithInt:0];
+    
+    NSMutableArray *partnerWin = [NSMutableArray arrayWithCapacity:self.players.count];
+    NSMutableArray *opntStrong = [NSMutableArray arrayWithCapacity:self.players.count];
+    NSMutableArray *opntWeak = [NSMutableArray arrayWithCapacity:self.players.count];
+    for (int i=0 ;i < self.players.count;i++){
+        //NSLog(@"add one number");
+        [partnerWin addObject:[NSNumber numberWithInt:0]];
+        [opntStrong addObject:[NSNumber numberWithInt:0]];
+        [opntWeak addObject:[NSNumber numberWithInt:0]];
+        
+        //NSLog(@"%@",partnerWin[i]);
+        
+    }
+    // 遍历记录计算数据
+    for (NSDictionary *dict in historyRecord){
+        //清空之前的显示
+        NSArray *subviewsOld = [self.stackViewForHistory subviews];
+        for (UIView * subview in subviewsOld){
+            [self.stackViewForHistory removeArrangedSubview:subview];
+            [subview removeFromSuperview];
+        }
+        
+        
+        
+        //记录得分和失分
+        //NSLog(@"dict = %@",dict);
+        
+        NSNumber *scoreget = dict[@"score"];
+        totalScore = [NSNumber numberWithInt:scoreget.intValue + totalScore.intValue];
+        NSNumber *scorelost = dict[@"opntScore"];
+        totalOpntScore = [NSNumber numberWithInt:scorelost.intValue + totalOpntScore.intValue];
+        NSNumber *isWinner = dict[@"isWinner"];
+        if (isWinner.boolValue){
+            
+            winGames =[NSNumber numberWithInt:1+winGames.intValue];
+            NSString *pw = dict[@"partnerName"];
+            NSString *weakopnt1 = dict[@"opnt1Name"];
+            NSString *weakopnt2 = dict[@"opnt2Name"];
+            for(int i = 0; i < self.players.count;i++){
+                if ([self.players[i][@"name"] isEqual:pw]){
+                    NSNumber *goodPartner = partnerWin[i];
+                    partnerWin[i] = [NSNumber numberWithInt:1+goodPartner.intValue];
+                }
+                if ([self.players[i][@"name"] isEqual:weakopnt1]){
+                    NSNumber *weakPartner = opntWeak[i];
+                    opntWeak[i] = [NSNumber numberWithInt:1+weakPartner.intValue];
+                }
+                if ([self.players[i][@"name"] isEqual:weakopnt2]){
+                    NSNumber *weakPartner = opntWeak[i];
+                    opntWeak[i] = [NSNumber numberWithInt:1+weakPartner.intValue];
+                }
+                
+            }
+        }
+        else{
+            
+            NSString *strongopnt1 = dict[@"opnt1Name"];
+            NSString *strongopnt2 = dict[@"opnt2Name"];
+            for(int i = 0; i < self.players.count;i++){
+                if ([self.players[i][@"name"] isEqual:strongopnt1]){
+                    NSNumber *weakPartner = opntStrong[i];
+                    opntStrong[i] = [NSNumber numberWithInt:1+weakPartner.intValue];
+                }
+                if ([self.players[i][@"name"] isEqual:strongopnt2]){
+                    NSNumber *weakPartner = opntStrong[i];
+                    opntStrong[i] = [NSNumber numberWithInt:1+weakPartner.intValue];
+                }
+                
+            }
+            
+        }
+    }
+    
+    NSLog(@"partner%@",partnerWin);
+    NSLog(@"os%@",opntStrong);
+    NSLog(@"ow%@",opntWeak);
+    
+    averageScore = [NSNumber numberWithDouble: totalScore.doubleValue / historyRecord.count];
+    averageOpntScore = [NSNumber numberWithDouble: totalOpntScore.doubleValue / historyRecord.count];
+    winRate = [NSNumber numberWithDouble: winGames.doubleValue / historyRecord.count];
+    
+    UIFont *labelFont = [UIFont fontWithName:@"PingFang TC" size:25];
+    UIColor *labelColor = [UIColor systemMintColor];
+    self.stackViewForHistory.layoutMargins = UIEdgeInsetsMake(30, 30, 30, 30);
+    self.stackViewForHistory.layoutMarginsRelativeArrangement = YES;
     
     //展示胜率
+    UILabel *label1 = [[UILabel alloc] init];
+    [label1 setText:[NSString stringWithFormat:@"Your win rate is %.2f%%",winRate.doubleValue*100]];
+    [label1 setFont:labelFont];
+    [label1 setTextColor:labelColor];
+    [label1 setAdjustsFontSizeToFitWidth:YES];
+    [label1 setFrame:self.stackViewForHistory.bounds];
+    [self.stackViewForHistory addArrangedSubview:label1];
     
-    //展示平均每局得分
+    //展示每局平均得分
+    UILabel *label2 = [[UILabel alloc] init];
+    [label2 setText:[NSString stringWithFormat:@"Your average score per game is %.1f",averageScore.doubleValue]];
+    [label2 setFont:labelFont];
+    [label2 setTextColor:labelColor];
+    [label2 setAdjustsFontSizeToFitWidth:YES];
+    [label2 setFrame:self.stackViewForHistory.bounds];
+    [self.stackViewForHistory addArrangedSubview:label2];
+    
+    //展示每局平均失分
+    UILabel *label3 = [[UILabel alloc] init];
+    [label3 setText:[NSString stringWithFormat:@"Your average lost score per game is %.1f",averageOpntScore.doubleValue]];
+    [label3 setFont:labelFont];
+    [label3 setTextColor:labelColor];
+    [label3 setAdjustsFontSizeToFitWidth:YES];
+    [label3 setFrame:self.stackViewForHistory.bounds];
+    [self.stackViewForHistory addArrangedSubview:label3];
+
+    
+    
     
     //展示最佳队友(胜场最多)
     
+    int maxNumber = 0;
+    int maxNumberIndex = 0;
+    for(int i = 0; i < partnerWin.count;i++){
+        NSNumber *numberNow = partnerWin[i];
+        if(numberNow.intValue > maxNumber){
+            maxNumber = numberNow.intValue;
+            maxNumberIndex = i;
+        }
+    }
+    if(maxNumber){
+        UILabel *label4 = [[UILabel alloc] init];
+        [label4 setText:[NSString stringWithFormat:@"Your best partner is %@, you have won %d games together.",self.players[maxNumberIndex][@"name"],maxNumber]];
+        [label4 setFont:labelFont];
+        [label4 setTextColor:labelColor];
+        [label4 setAdjustsFontSizeToFitWidth:YES];
+        [label4 setFrame:self.stackViewForHistory.bounds];
+        [self.stackViewForHistory addArrangedSubview:label4];
+    }
+    
     //展示最强对手(负场最多)
     
+    maxNumber = 0;
+    maxNumberIndex = 0;
+    for(int i = 0; i < opntStrong.count;i++){
+        NSNumber *numberNow = opntStrong[i];
+        if(numberNow.intValue > maxNumber){
+            maxNumber = numberNow.intValue;
+            maxNumberIndex = i;
+        }
+    }
+    if(maxNumber){
+        UILabel *label5 = [[UILabel alloc] init];
+        [label5 setText:[NSString stringWithFormat:@"Your biggest enemy is %@, you have lost %d games against him/her.",self.players[maxNumberIndex][@"name"],maxNumber]];
+        [label5 setFont:labelFont];
+        [label5 setTextColor:labelColor];
+        [label5 setAdjustsFontSizeToFitWidth:YES];
+        [label5 setFrame:self.stackViewForHistory.bounds];
+        [self.stackViewForHistory addArrangedSubview:label5];
+    }
+    
+    //展示最常击败的对手(胜场最多)
+    maxNumber = 0;
+    maxNumberIndex = 0;
+    for(int i = 0; i < opntWeak.count;i++){
+        NSNumber *numberNow = opntWeak[i];
+        if(numberNow.intValue > maxNumber){
+            maxNumber = numberNow.intValue;
+            maxNumberIndex = i;
+        }
+    }
+    if(maxNumber){
+        UILabel *label6 = [[UILabel alloc] init];
+        [label6 setText:[NSString stringWithFormat:@"Your favorite enemy is %@, you have won %d games against him/her.",self.players[maxNumberIndex][@"name"],maxNumber]];
+        [label6 setFont:labelFont];
+        [label6 setTextColor:labelColor];
+        [label6 setAdjustsFontSizeToFitWidth:YES];
+        [label6 setFrame:self.stackViewForHistory.bounds];
+        [self.stackViewForHistory addArrangedSubview:label6];
+    }
     //展示图表1(十场分数变化)
     
     //展示图表2(十场得分变化)
