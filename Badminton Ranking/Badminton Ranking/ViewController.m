@@ -10,7 +10,7 @@
 #import "LineChartViewController.h"
 #import "Badminton Ranking-Bridging-Header.h"
 
-@interface ViewController ()<UITableViewDelegate,UITableViewDataSource>
+@interface ViewController ()<UITableViewDelegate,UITableViewDataSource,ChartViewDelegate>
 
 @property(strong,nonatomic) NSArray *	players;
 @property(nonatomic,copy) NSString* docPath;
@@ -31,8 +31,9 @@
 @property (weak, nonatomic) IBOutlet UIButton *winnerScoreBtn;
 @property (weak, nonatomic) IBOutlet UIButton *loserScoreBtn;
 @property (weak, nonatomic) IBOutlet UIStackView *stackViewForHistory;
+@property (weak, nonatomic) IBOutlet UIView *chartView;
 
-@property (nonatomic,strong)LineChartView *lineChart;
+@property (nonatomic,strong)LineChartView *scoreLineChart;
 
 
 
@@ -49,6 +50,7 @@
     // Do any additional setup after loading the view.
     // 判断是否存在 players.plist 文件,如果存在的话,加载排名
     self.docPath = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
+    NSLog(@"%@",self.docPath);
     self.filePath = [self.docPath stringByAppendingPathComponent:@"players.plist"];
     //建立文件管理器
     self.filemanager = [NSFileManager defaultManager];
@@ -93,6 +95,13 @@
     NSString *historyFilePath = [self.docPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.plist",self.players[[indexPath indexAtPosition:1]][@"name"]]];
     NSArray *historyRecord = [NSArray arrayWithContentsOfFile:historyFilePath];
     //NSLog(@"history record %@",[NSString stringWithFormat:@"%@.plist",self.players[[indexPath indexAtPosition:1]][@"name"]]);
+    NSArray *subviewsOld = [self.stackViewForHistory subviews];
+    [self.scoreLineChart removeFromSuperview];
+    for (UIView * subview in subviewsOld){
+        [self.stackViewForHistory removeArrangedSubview:subview];
+        [subview removeFromSuperview];
+        
+    }
     
     NSNumber *winRate = [NSNumber numberWithDouble:0.0];
     NSNumber *winGames = [NSNumber numberWithInt:0];
@@ -113,14 +122,14 @@
         //NSLog(@"%@",partnerWin[i]);
         
     }
+    if(historyRecord.count<1){
+        return;
+    }
     // 遍历记录计算数据
     for (NSDictionary *dict in historyRecord){
         //清空之前的显示
-        NSArray *subviewsOld = [self.stackViewForHistory subviews];
-        for (UIView * subview in subviewsOld){
-            [self.stackViewForHistory removeArrangedSubview:subview];
-            [subview removeFromSuperview];
-        }
+        
+        
         
         
         
@@ -279,11 +288,133 @@
     }
     //展示图表1(十场分数变化)
     
+    // 完成要展示的数据的初始化
+    NSMutableArray *personalScoreInRecent30Games = [NSMutableArray arrayWithCapacity:30];
+    
+    if(historyRecord.count <= 30){
+        for(NSDictionary* dict in historyRecord){
+            NSNumber *personalScore = dict[@"personalScore"];
+            [personalScoreInRecent30Games addObject:personalScore];
+        }
+    }else{
+        for(unsigned long int i = historyRecord.count - 30;i < historyRecord.count;i++){
+            NSNumber *personalScore = historyRecord[i][@"personalScore"];
+            [personalScoreInRecent30Games addObject:personalScore];
+        }
+    }
+    
+    //初始化图表
+    self.scoreLineChart = [[LineChartView alloc] initWithFrame:self.chartView.bounds];
+    
+    [self.chartView addSubview:self.scoreLineChart];
+
+    
+    // 初始化图表的各项属性
+    /* 设置曲线图属性 */
+    self.scoreLineChart.backgroundColor = [UIColor clearColor];  //图表背景
+    self.scoreLineChart.noDataText = @"No data";        //没数据时显示的文字
+    self.scoreLineChart.chartDescription.enabled = NO;           //不显示图表描述文字
+    self.scoreLineChart.dragEnabled = YES;                      //图表可以拖动
+    self.scoreLineChart.legend.enabled = NO;                     //不显示图例
+    self.scoreLineChart.scaleXEnabled = YES;                      //X轴不能缩放
+    self.scoreLineChart.scaleYEnabled = NO;                      //Y轴不能缩放
+    self.scoreLineChart.pinchZoomEnabled = NO;                   //不能捏合手势缩放
+    self.scoreLineChart.delegate = self;                         //设置代理
+    
+    /* 设置坐标轴属性 */
+    ChartXAxis *xAxis = self.scoreLineChart.xAxis;               //获取图表X轴
+    xAxis.labelPosition = XAxisLabelPositionBottom;     //X轴标签位置
+    xAxis.drawLabelsEnabled = YES;                      //显示X轴
+    xAxis.drawGridLinesEnabled = NO;                    //隐藏X轴表格线
+    //xAxis.axisMaximum = self.dataArray.count-1+0.3 ;          //设置左右边距
+    xAxis.axisMinimum = -0.3 ;
+    xAxis.axisLineWidth = 1.0;                          //X轴宽度
+    xAxis.granularity = 1.0;
+    xAxis.axisLineColor = [UIColor colorWithRed:(140.0/255) green:(234.0/255) blue:1 alpha:1];
+    xAxis.spaceMin = 9;
+    self.scoreLineChart.rightAxis.enabled = NO;                  //右边轴不显示
+    
+    ChartYAxis *leftAxis = self.scoreLineChart.leftAxis;         //获取左边轴
+    leftAxis.enabled = YES;                             //显示左边轴
+    leftAxis.drawGridLinesEnabled = NO;                 //隐藏Y轴表格线
+    leftAxis.axisMinimum = 800;                           //Y轴最小值
+    leftAxis.drawAxisLineEnabled = YES;                 //绘制Y轴
+    leftAxis.axisLineWidth = 1.0;                       //X轴宽度
+    leftAxis.axisLineColor = [UIColor colorWithRed:(140.0/255) green:(234.0/255) blue:1 alpha:1];
+
+    [self.scoreLineChart animateWithXAxisDuration:0.5];
+    //  设置图表数据
+    [self setLineChartData:personalScoreInRecent30Games];
+    //  添加图表到 stackview 中
+    
+
+    
     //展示图表2(十场得分变化)
-    
-    
-    
 }
+
+-(void)setLineChartData:(NSMutableArray *)dataArray{
+    if(!dataArray.count)
+    {
+        return;
+    }
+    LineChartDataSet *set1 = nil;
+    NSMutableArray *values = [[NSMutableArray alloc] init];
+    for (int i = 0; i < dataArray.count; i++)
+    {
+        //将横纵坐标以ChartDataEntry的形式保存下来，注意横坐标值一般是i的值，而不是你的数据,自定义X轴坐标label需新建一个XFormat类来赋值
+        [values addObject:[[ChartDataEntry alloc] initWithX:i y:[dataArray[i] floatValue] icon: nil]];
+     }
+    //如果图表有绘制过，可以在这里重新给data赋值就行,
+    //如果没有，需要先定义set的属性。
+    if (self.scoreLineChart.data.dataSetCount > 0)
+     {
+         set1 = (LineChartDataSet *)self.scoreLineChart.data.dataSets[0];
+         set1.values = values;
+         //通知data去更新
+         [self.scoreLineChart.data notifyDataChanged];
+        //通知图表去更新
+        [self.scoreLineChart notifyDataSetChanged];
+         
+    }
+    else
+    {
+        set1 = [[LineChartDataSet alloc] initWithValues:values label:@"DataSet 1"];
+        //自定义set的各种属性
+        [self configSet:set1];
+        NSMutableArray *dataSets = [[NSMutableArray alloc] init];
+        [dataSets addObject:set1];
+        //将set保存到data当中
+        LineChartData *data = [[LineChartData alloc] initWithDataSets:dataSets];
+        self.scoreLineChart.data = data;
+     }
+}
+
+-(void)configSet:(LineChartDataSet*)set{
+    //是否绘制图标
+    set.drawIconsEnabled = NO;
+    //折线颜色
+    [set setColor:[UIColor colorWithRed:(140.0/255) green:(234.0/255) blue:1 alpha:1]];
+    //折线点的颜色
+    [set setCircleColor:[UIColor colorWithRed:(140.0/255) green:(234.0/255) blue:1 alpha:1]];
+    //折线的宽度
+    set.lineWidth = 1.0;
+    //折线点的宽度
+    set.circleRadius = 3.0;
+    //是否画空心圆
+    set.drawCircleHoleEnabled = YES;
+    //折线弧度
+    set.mode = LineChartModeCubicBezier;
+    set.cubicIntensity = 0.2;
+    //折线点的值的大小
+    set.valueFont = [UIFont systemFontOfSize:9.f];
+    //图例的线宽
+    set.formLineWidth = 1.0;
+    //图例的字体大小
+    set.formSize = 15.0;
+    //显示颜色填充
+    set.drawFilledEnabled = YES;
+}
+
 
 - (IBAction)addMember:(UIButton *)sender {
     //弹出一个窗口,请求新成员的名字
@@ -377,6 +508,7 @@
     }
     [self.namesView removeFromSuperview];
     [self.cover removeFromSuperview];
+    [self loadAndSortData];
     return;
 }
 - (IBAction)recordBtnClicked:(UIButton *)sender {
@@ -405,11 +537,11 @@
     double team2p = play3p.doubleValue + play4p.doubleValue;
     
     
-    CGFloat winRateTeam1 = 1 / (1+pow(10, (team2p - team1p) / 1000));
+    CGFloat winRateTeam1 = 1 / (1+pow(10, (team2p - team1p) / 2000));
     CGFloat winRateTeam2 = 1 - winRateTeam1;
     
-    CGFloat changeTeam1 = 50 * (winRateTeam2);
-    CGFloat changeTeam2 = 50 * (-winRateTeam2) * 0.7;
+    CGFloat changeTeam1 = 120 * (winRateTeam2);
+    CGFloat changeTeam2 = 120 * (-winRateTeam2) * 0.7;
     
     //改变分数
     playerDictArray[0][@"score"] = [[NSNumber alloc] initWithDouble:play1p.doubleValue + 0.5*changeTeam1];
@@ -556,7 +688,7 @@
         [btnName setTitle:playersNameSorted[i][@"name"] forState:UIControlStateNormal];
         NSLog(@"%@",btnName.titleLabel.text);
         btnName.titleLabel.textColor = [UIColor blackColor];
-        btnName.titleLabel.font = [UIFont systemFontOfSize:15.0];
+        btnName.titleLabel.font = [UIFont systemFontOfSize:25.0];
         CGFloat margin = 50;
         CGFloat gap = 30;
         

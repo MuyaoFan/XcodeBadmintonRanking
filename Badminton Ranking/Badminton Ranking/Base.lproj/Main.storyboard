@@ -123,11 +123,16 @@
                                     <action selector="addMember:" destination="BYZ-38-t0r" eventType="touchUpInside" id="abA-iq-OaL"/>
                                 </connections>
                             </button>
-                            <stackView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" axis="vertical" distribution="equalCentering" alignment="top" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="9Dy-Oa-kAG">
-                                <rect key="frame" x="248" y="201" width="812" height="493"/>
+                            <stackView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" axis="vertical" distribution="fillEqually" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="9Dy-Oa-kAG">
+                                <rect key="frame" x="248" y="201" width="812" height="316"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </stackView>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="LBz-lQ-nLv">
+                                <rect key="frame" x="248" y="525" width="812" height="174"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" systemColor="systemGray6Color"/>
+                            </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemGray2Color"/>
@@ -137,6 +142,7 @@
                         <outlet property="Player2" destination="95d-V2-ScF" id="X86-pt-TyX"/>
                         <outlet property="Player3" destination="Ys3-3f-J4o" id="SIq-Se-eoo"/>
                         <outlet property="Player4" destination="yII-o8-Av6" id="eBs-jv-pt0"/>
+                        <outlet property="chartView" destination="LBz-lQ-nLv" id="ah3-jZ-cIM"/>
                         <outlet property="loserScoreBtn" destination="kcQ-J2-hZR" id="B2j-Gl-4jF"/>
                         <outlet property="recordBtn" destination="nxZ-l5-PvE" id="coF-Ol-swS"/>
                         <outlet property="stackViewForHistory" destination="9Dy-Oa-kAG" id="BBP-Ve-NOY"/>
