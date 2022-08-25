@@ -658,7 +658,12 @@
 
 -(IBAction)coverClicked:(UIButton *)sender{
     [self.namesView removeFromSuperview];
+    
+    [self.scoreView removeFromSuperview];
+    
     [self.cover removeFromSuperview];
+    
+    [self loadAndSortData];
     return;
 }
 
